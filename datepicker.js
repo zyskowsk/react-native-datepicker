@@ -101,15 +101,20 @@ class DatePicker extends Component {
   onPressCancel() {
     this.setModalVisible(false);
 
+    if (typeof this.props.onPressCancel === 'function') {
+      this.props.onPressCancel();
+    }
     if (typeof this.props.onCloseModal === 'function') {
       this.props.onCloseModal();
     }
   }
 
   onPressConfirm() {
-    this.datePicked();
     this.setModalVisible(false);
 
+    if (typeof this.props.onPressConfirm === 'function') {
+      this.props.onPressConfirm();
+    }
     if (typeof this.props.onCloseModal === 'function') {
       this.props.onCloseModal();
     }
@@ -188,7 +193,7 @@ class DatePicker extends Component {
     this.setState({
       allowPointerEvents: false,
       date: date
-    });
+    }, this.datePicked);
     const timeoutId = setTimeout(() => {
       this.setState({
         allowPointerEvents: true
@@ -363,7 +368,7 @@ class DatePicker extends Component {
               <View style={dateInputStyle}>
                 {this.getTitleElement()}
               </View>
-            :
+              :
               <View/>
           }
           {this._renderIcon()}
@@ -372,7 +377,9 @@ class DatePicker extends Component {
             animationType="none"
             visible={this.state.modalVisible}
             supportedOrientations={SUPPORTED_ORIENTATIONS}
-            onRequestClose={() => {this.setModalVisible(false);}}
+            onRequestClose={() => {
+              this.setModalVisible(false);
+            }}
           >
             <View
               style={{flex: 1}}
@@ -403,19 +410,22 @@ class DatePicker extends Component {
                         locale={locale}
                       />
                     </View>
-                    <TouchableComponent
-                      underlayColor={'transparent'}
-                      onPress={this.onPressCancel}
-                      style={[Style.btnText, Style.btnCancel, customStyles.btnCancel]}
-                      testID={cancelBtnTestID}
-                    >
-                      <Text
-                        allowFontScaling={allowFontScaling}
-                        style={[Style.btnTextText, Style.btnTextCancel, customStyles.btnTextCancel]}
+                    {cancelBtnText ?
+                      <TouchableComponent
+                        underlayColor={'transparent'}
+                        onPress={this.onPressCancel}
+                        style={[Style.btnText, Style.btnCancel, customStyles.btnCancel]}
+                        testID={cancelBtnTestID}
                       >
-                        {cancelBtnText}
-                      </Text>
-                    </TouchableComponent>
+                        <Text
+                          allowFontScaling={allowFontScaling}
+                          style={[Style.btnTextText, Style.btnTextCancel, customStyles.btnTextCancel]}
+                        >
+                          {cancelBtnText}
+                        </Text>
+                      </TouchableComponent>
+                      : null
+                    }
                     <TouchableComponent
                       underlayColor={'transparent'}
                       onPress={this.onPressConfirm}
@@ -484,6 +494,8 @@ DatePicker.propTypes = {
   onOpenModal: PropTypes.func,
   onCloseModal: PropTypes.func,
   onPressMask: PropTypes.func,
+  onPressCancel: PropTypes.func,
+  onPressConfirm: PropTypes.func,
   placeholder: PropTypes.string,
   modalOnResponderTerminationRequest: PropTypes.func,
   is24Hour: PropTypes.bool,

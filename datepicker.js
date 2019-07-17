@@ -363,7 +363,7 @@ class DatePicker extends Component {
               <View style={dateInputStyle}>
                 {this.getTitleElement()}
               </View>
-            :
+              :
               <View/>
           }
           {this._renderIcon()}
@@ -372,7 +372,9 @@ class DatePicker extends Component {
             animationType="none"
             visible={this.state.modalVisible}
             supportedOrientations={SUPPORTED_ORIENTATIONS}
-            onRequestClose={() => {this.setModalVisible(false);}}
+            onRequestClose={() => {
+              this.setModalVisible(false);
+            }}
           >
             <View
               style={{flex: 1}}
@@ -403,19 +405,22 @@ class DatePicker extends Component {
                         locale={locale}
                       />
                     </View>
-                    <TouchableComponent
-                      underlayColor={'transparent'}
-                      onPress={this.onPressCancel}
-                      style={[Style.btnText, Style.btnCancel, customStyles.btnCancel]}
-                      testID={cancelBtnTestID}
-                    >
-                      <Text
-                        allowFontScaling={allowFontScaling}
-                        style={[Style.btnTextText, Style.btnTextCancel, customStyles.btnTextCancel]}
+                    {cancelBtnText ?
+                      <TouchableComponent
+                        underlayColor={'transparent'}
+                        onPress={this.onPressCancel}
+                        style={[Style.btnText, Style.btnCancel, customStyles.btnCancel]}
+                        testID={cancelBtnTestID}
                       >
-                        {cancelBtnText}
-                      </Text>
-                    </TouchableComponent>
+                        <Text
+                          allowFontScaling={allowFontScaling}
+                          style={[Style.btnTextText, Style.btnTextCancel, customStyles.btnTextCancel]}
+                        >
+                          {cancelBtnText}
+                        </Text>
+                      </TouchableComponent>
+                      : null
+                    }
                     <TouchableComponent
                       underlayColor={'transparent'}
                       onPress={this.onPressConfirm}
